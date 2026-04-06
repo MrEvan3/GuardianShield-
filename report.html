@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GuardianShield — Reportar Problema</title>
+  <style>
+    :root {
+      --bg: #08080e;
+      --bg-card: #12121c;
+      --bg-input: #0e0e18;
+      --border: rgba(255,255,255,0.06);
+      --text: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --accent: #8B5CF6;
+      --accent-hover: #7C3AED;
+      --green: #10B981;
+      --red: #DC2626;
+      --radius: 12px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 0 20px 40px !important; /* Zero top padding */
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .report-container {
+      width: 100%;
+      max-width: 640px;
+    }
+
+    .report-header {
+      text-align: center;
+      margin-bottom: 24px; /* Reduced from 32px */
+      margin-top: 0 !important;
+    }
+
+    .report-header__icon {
+      font-size: 48px;
+      margin-bottom: 4px; /* Reduced from 12px to remove vague space */
+      display: block;
+      margin-top: 0 !important;
+    }
+
+    .report-header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #f1f5f9, #8B5CF6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 6px;
+    }
+
+    .report-header p {
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .report-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 20px;
+    }
+
+    .field {
+      margin-bottom: 20px;
+    }
+
+    .field:last-child { margin-bottom: 0; }
+
+    .field label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .field label span {
+      color: var(--text-muted);
+      font-weight: 400;
+      font-size: 12px;
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 14px;
+      font-family: inherit;
+      transition: all 0.2s;
+      outline: none;
+      resize: vertical;
+    }
+
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(139,92,246,0.15);
+    }
+
+    .field input::placeholder,
+    .field textarea::placeholder {
+      color: var(--text-muted);
+      opacity: 0.6;
+    }
+
+    .field select option {
+      background: var(--bg-card);
+      color: var(--text);
+    }
+
+    .field textarea {
+      min-height: 140px;
+      line-height: 1.6;
+    }
+
+    /* ─── Categoria badges ─── */
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .category-option {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 32px 24px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s var(--ease);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .category-option:hover {
+      background: var(--bg-hover);
+      border-color: var(--neon-dim);
+      transform: translateY(-4px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    }
+
+    .category-option input {
+      display: none;
+    }
+
+    .category-option.selected {
+      background: rgba(139, 92, 246, 0.1);
+      border-color: var(--accent);
+      box-shadow: 0 0 25px rgba(139, 92, 246, 0.2), inset 0 0 10px rgba(139, 92, 246, 0.1);
+    }
+
+    .category-option.selected .category-option__icon svg {
+      color: var(--accent);
+      filter: drop-shadow(0 0 8px var(--accent));
+    }
+
+    .category-option__icon {
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.03);
+      border-radius: 14px;
+      transition: all 0.3s;
+    }
+
+    .category-option__icon svg {
+      width: 32px;
+      height: 32px;
+      color: var(--text-secondary);
+      transition: all 0.3s;
+    }
+
+    .category-option span:last-child {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      letter-spacing: 0.3px;
+    }
+
+    .category-option.selected span:last-child {
+      color: #fff;
+    }
+
+    /* ─── Drop zone ─── */
+    .dropzone {
+      border: 2px dashed rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 28px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+    }
+
+    .dropzone:hover,
+    .dropzone.drag-over {
+      border-color: var(--accent);
+      background: rgba(139,92,246,0.04);
+    }
+
+    .dropzone__icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .dropzone__text {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .dropzone__hint {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .dropzone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    /* ─── Preview de imagens ─── */
+    .image-previews {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .image-preview {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .image-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .image-preview__remove {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 22px;
+      height: 22px;
+      background: rgba(220,38,38,0.9);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s;
+    }
+
+    .image-preview__remove:hover {
+      transform: scale(1.15);
+    }
+
+    /* ─── Botões ─── */
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 14px 24px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.25s;
+      border: none;
+      letter-spacing: 0.3px;
+    }
+
+    .btn--primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(139,92,246,0.3);
+    }
+
+    .btn--primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px rgba(139,92,246,0.4);
+    }
+
+    .btn--primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn--secondary {
+      background: rgba(255,255,255,0.06);
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+
+    .btn--secondary:hover {
+      background: rgba(255,255,255,0.1);
+      color: var(--text);
+    }
+
+    /* ─── Success state ─── */
+    .success-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(8,8,14,0.95);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .success-overlay.visible {
+      display: flex;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .success-overlay__icon {
+      font-size: 64px;
+      animation: bounceIn 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .success-overlay h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--green);
+    }
+
+    .success-overlay p {
+      color: var(--text-muted);
+      font-size: 14px;
+      max-width: 400px;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .success-overlay .btn {
+      margin-top: 12px;
+      flex: initial;
+      min-width: 180px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes bounceIn {
+      0% { transform: scale(0); }
+      60% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    /* ─── Info banner ─── */
+    .info-banner {
+      background: rgba(59,130,246,0.08);
+      border: 1px solid rgba(59,130,246,0.15);
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .info-banner__icon {
+      font-size: 16px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ─── Transparência & Status Real-Time ─── */
+    .gs-status-card {
+      background: rgba(139, 92, 246, 0.03);
+      border: 1px solid rgba(139, 92, 246, 0.15);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+      text-align: center;
+      transition: transform 0.2s;
+    }
+
+    .gs-status-card:hover {
+      transform: translateY(-2px);
+      background: rgba(139, 92, 246, 0.05);
+    }
+
+    .gs-status-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 10px;
+      margin-top: 20px;
+      text-align: left;
+    }
+
+    .gs-status-item {
+      background: rgba(0,0,0,0.25);
+      padding: 10px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .gs-pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .gs-pulse-dot--online { background: #10B981; }
+    .gs-pulse-dot--offline { background: #64748B; }
+
+    .gs-pulse-dot--online::after {
+      content: '';
+      position: absolute;
+      inset: -3px;
+      border-radius: 50%;
+      background: inherit;
+      opacity: 0.4;
+      animation: gs-pulse-glow 1.5s infinite;
+    }
+
+    @keyframes gs-pulse-glow {
+      0% { transform: scale(1); opacity: 0.6; }
+      100% { transform: scale(2.5); opacity: 0; }
+    }
+
+    .gs-status-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      line-height: 1.1;
+    }
+
+    .gs-status-value {
+      font-size: 9px;
+      color: var(--text-muted);
+      display: block;
+    }
+
+    /* Modal Overlay */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(8,8,14,0.95);
+      z-index: 200;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .modal-content {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      width: 100%;
+      max-width: 700px;
+      position: relative;
+      animation: modalIn 0.3s ease;
+    }
+
+    @keyframes modalIn {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    .diag-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+  <div class="report-container">
+    <div class="report-header">
+      <span class="report-header__icon"><svg class="gs-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg></span>
+      <h1>Reportar um Problema</h1>
+      <p>Ajude-nos a melhorar o GuardianShield relatando problemas encontrados.</p>
+    </div>
+
+    <div class="info-banner">
+      <span class="info-banner__icon"><svg class="gs-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></span>
+      <span>Seu relatório é salvo <strong>localmente</strong> na extensão. Nenhum dado é enviado para servidores externos. Você pode visualizar os relatórios na página de Configurações → Dados.</span>
+    </div>
+
+    <!-- Card de Transparência -->
+    <div class="gs-status-card">
+      <h2 style="font-size: 16px; margin-bottom: 8px; color: #fff; font-weight: 700;">Transparência do Sistema</h2>
+      <p style="margin-bottom: 20px; font-size: 13px; color: var(--text-secondary);">Visualize o funcionamento dos motores de segurança v1.0 e o impacto no hardware em tempo real.</p>
+      <button type="button" class="btn btn--secondary" id="btn-show-status" style="width: 100%; font-weight: 700;">VISUALIZAR O QUE ESTÁ FUNCIONANDO</button>
+    </div>
+
+    <form id="report-form">
+      <div class="report-card">
+        <!-- Categoria -->
+        <div class="field">
+          <label>
+            <svg class="gs-icon" style="width: 14px; height: 14px; margin-right: 6px; vertical-align: text-bottom;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+            Categoria do Problema
+          </label>
+          <div class="category-grid" id="category-grid">
+            <label class="category-option selected">
+              <input type="radio" name="category" value="bug" checked>
+              <span class="category-option__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20c-3.31 0-6-2.69-6-6v-1h12v1c0 3.31-2.69 6-6 6Z"></path><path d="M12 20v-9"></path><path d="M12 7V3"></path><path d="M4.88 19 3 22"></path><path d="M19.12 19 21 22"></path><path d="M3 5c0 2.1 1.6 3.8 3.5 4"></path><path d="M21 5c0 2.1-1.6 3.8-3.5 4"></path></svg></span>
+              <span>Bug / Erro</span>
+            </label>
+            <label class="category-option">
+              <input type="radio" name="category" value="falsepositive">
+              <span class="category-option__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg></span>
+              <span>Falso Positivo</span>
+            </label>
+            <label class="category-option">
+              <input type="radio" name="category" value="blocking">
+              <span class="category-option__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg></span>
+              <span>Site Quebrado</span>
+            </label>
+            <label class="category-option">
+              <input type="radio" name="category" value="feature">
+              <span class="category-option__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="7.5 4.21 12 6.81 16.5 4.21"></polyline><polyline points="7.5 19.79 7.5 14.6 3 12"></polyline><polyline points="21 12 16.5 14.6 16.5 19.79"></polyline><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg></span>
+              <span>Sugestão</span>
+            </label>
+            <label class="category-option">
+              <input type="radio" name="category" value="adblock">
+              <span class="category-option__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line><line x1="3" y1="9" x2="21" y2="9"></line></svg></span>
+              <span>Ad Escapou</span>
+            </label>
+            <label class="category-option">
+              <input type="radio" name="category" value="other">
+              <span class="category-option__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg></span>
+              <span>Outro</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Site afetado -->
+        <div class="field">
+          <label>
+            <svg class="gs-icon" style="width: 14px; height: 14px; margin-right: 6px; vertical-align: text-bottom;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+            Site afetado <span>(preenchido automaticamente)</span>
+          </label>
+          <input type="url" id="report-url" placeholder="https://exemplo.com" autocomplete="off">
+        </div>
+
+        <!-- Descrição -->
+        <div class="field">
+          <label>
+            <svg class="gs-icon" style="width: 14px; height: 14px; margin-right: 6px; vertical-align: text-bottom;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+            Descreva o problema
+          </label>
+          <textarea id="report-description" placeholder="Explique o que aconteceu, o que você esperava e como reproduzir o problema..."></textarea>
+        </div>
+
+        <!-- Anexar imagens -->
+        <div class="field">
+          <label>
+            <svg class="gs-icon" style="width: 14px; height: 14px; margin-right: 6px; vertical-align: text-bottom;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.51a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+            Anexar capturas de tela <span>(máx. 3 imagens, até 2MB cada)</span>
+          </label>
+          <div class="dropzone" id="dropzone">
+            <span class="dropzone__icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle></svg></span>
+            <div class="dropzone__text">Arraste imagens aqui ou clique para selecionar</div>
+            <div class="dropzone__hint">PNG, JPG, WEBP — máximo 3 imagens</div>
+            <input type="file" id="file-input" accept="image/png,image/jpeg,image/webp" multiple>
+          </div>
+          <div class="image-previews" id="image-previews"></div>
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <button type="button" class="btn btn--secondary" id="btn-cancel">Cancelar</button>
+        <button type="submit" class="btn btn--primary" id="btn-submit">
+          <svg class="gs-icon" style="width: 14px; height: 14px; margin-right: 8px; vertical-align: middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+          Enviar Relatório
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Success overlay -->
+  <div class="success-overlay" id="success-overlay">
+    <span class="success-overlay__icon"><svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></span>
+    <h2>Relatório Enviado!</h2>
+    <p>Seu relatório foi salvo com sucesso. Você pode visualizá-lo na página de Configurações → seção Dados.</p>
+    <button class="btn btn--primary" id="btn-close-success">Fechar</button>
+  </div>
+
+  <!-- Modal Status Real-Time -->
+  <div class="modal-overlay" id="modal-status">
+    <div class="modal-content">
+      <button class="modal-close" id="btn-close-status">✕</button>
+      
+      <div class="diag-header">
+        <h2 style="font-size: 18px; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 10px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+          Diagnóstico de Operação v1.0
+        </h2>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div class="gs-pulse-dot gs-pulse-dot--online"></div>
+          <span style="font-size: 12px; font-weight: 700; color: var(--green);">SISTEMA ESTÁVEL</span>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 16px; margin-bottom: 24px; background: rgba(255,255,255,0.02); padding: 12px 20px; border-radius: 12px; border: 1px solid var(--border);">
+        <div style="flex: 1;"><small style="display:block; font-size: 9px; color: var(--text-muted); text-transform: uppercase;">Latência</small><span style="color: var(--green); font-size: 13px; font-weight: 700;">&lt; 1.0ms</span></div>
+        <div style="flex: 1;"><small style="display:block; font-size: 9px; color: var(--text-muted); text-transform: uppercase;">Hardware</small><span style="color: var(--green); font-size: 13px; font-weight: 700;">Ultra-Light</span></div>
+        <div style="flex: 1;"><small style="display:block; font-size: 9px; color: var(--text-muted); text-transform: uppercase;">Integridade</small><span style="color: var(--green); font-size: 13px; font-weight: 700;">Protegido</span></div>
+      </div>
+
+      <h3 style="color: #fff; font-size: 12px; font-weight: 800; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px;">Motores de Segurança Ativos</h3>
+      <div class="gs-status-grid" id="status-grid">
+        <!-- Preenchido pelo JS -->
+      </div>
+
+      <div style="margin-top: 24px; padding: 16px; background: rgba(139, 92, 246, 0.05); border-radius: 12px; border: 1px solid rgba(139, 92, 246, 0.15);">
+        <p style="color: var(--text-secondary); font-size: 12px; line-height: 1.5;">
+          <strong>Nota Técnica:</strong> O GuardianShield™ v1.0 opera offline-first. Nenhum dado técnico ou de navegação sai da sua máquina. O processamento via IA ocorre de forma otimizada para não afetar o desempenho do seu PC.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script src="report.js"></script>
+</body>
+</html>

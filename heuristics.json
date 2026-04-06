@@ -1,0 +1,70 @@
+{
+  "brBanks": [
+    "itau.com.br", "bradesco.com.br", "bb.com.br", "caixa.gov.br",
+    "santander.com.br", "nubank.com.br", "inter.co", "c6bank.com.br",
+    "banrisul.com.br", "sicoob.com.br", "sicredi.com.br", "safra.com.br",
+    "btgpactual.com", "xpi.com.br", "modal.com.br", "agibank.com.br",
+    "neon.com.br", "pan.com.br", "original.com.br", "bmg.com.br",
+    "mercadopago.com.br", "pagseguro.com.br", "picpay.com",
+    "stone.com.br", "cielo.com.br", "getnet.com.br", "rede.com.br"
+  ],
+  "brGovernment": [
+    "gov.br", "receita.fazenda.gov.br", "esocial.gov.br",
+    "caixa.gov.br", "inss.gov.br", "susep.gov.br",
+    "bcb.gov.br", "anatel.gov.br", "anvisa.gov.br",
+    "conectividade.gov.br", "detran.sp.gov.br",
+    "sefaz.sp.gov.br", "tjsp.jus.br"
+  ],
+  "brEcommerce": [
+    "mercadolivre.com.br", "americanas.com.br", "casasbahia.com.br",
+    "magazineluiza.com.br", "amazon.com.br", "shopee.com.br",
+    "aliexpress.com", "submarino.com.br", "pontofrio.com.br",
+    "extra.com.br", "carrefour.com.br", "netshoes.com.br"
+  ],
+  "suspiciousTLDs": [
+    ".tk", ".ml", ".ga", ".cf", ".gq", ".xyz", ".top", ".work",
+    ".click", ".loan", ".racing", ".download", ".stream", ".gdn",
+    ".bid", ".win", ".party", ".review", ".science", ".trade",
+    ".webcam", ".date", ".faith", ".accountant", ".cricket"
+  ],
+  "highRiskCountries": ["RU", "CN", "NG", "KP", "IR", "VN", "UA", "RO", "BD", "PK"],
+  "phishingKeywords": [
+    "login", "signin", "sign-in", "verify", "verification", "secure",
+    "account", "update", "confirm", "banking", "password", "credential",
+    "banco", "senha", "cartao", "pix", "boleto", "fatura", "nfe",
+    "nota-fiscal", "cpf", "cnpj", "comprovante", "transferencia",
+    "desbloqueio", "atualizar", "confirmar", "seguranca",
+    "premio", "sorteio", "ganhou", "parabens", "urgente"
+  ],
+  "typosquattingTargets": {
+    "itau": ["ltau", "1tau", "itaú", "itauu", "itaw", "ltaú"],
+    "bradesco": ["bradesoo", "bradeeco", "brdesco", "bradescoo"],
+    "nubank": ["nubenk", "nubnak", "nubamk", "mubank"],
+    "caixa": ["caiixa", "calxa", "caxia", "caxa"],
+    "santander": ["santannder", "santamder", "santandeer", "santader"],
+    "mercadolivre": ["mercadollvre", "mercadolvre", "mercadol1vre"],
+    "google": ["googlee", "gogle", "g00gle", "googie"],
+    "facebook": ["faceboook", "faceb00k", "facebok", "facbook"],
+    "whatsapp": ["whatssapp", "whatsap", "watsapp", "whatapp"],
+    "instagram": ["instagran", "instgram", "lnstagram", "1nstagram"]
+  },
+  "l33tMap": {
+    "0": "o", "1": "l", "3": "e", "4": "a", "5": "s",
+    "7": "t", "@": "a", "!": "i", "$": "s", "+": "t"
+  },
+  "maliciousPatterns": {
+    "hiddenIframe": "iframe[style*='display:none'], iframe[style*='visibility:hidden'], iframe[width='0'], iframe[height='0']",
+    "base64Script": "script[src*='base64'], script[src*='eval']",
+    "suspiciousForm": "form[action*='http']:not([action*='CURRENT_DOMAIN'])",
+    "dataExfil": "img[src*='?data='], img[src*='&cookie=']"
+  },
+  "knownPhishingDomains": [
+    "pixfraude.com.br", "atualize-seu-banco.com", "confirme-sua-conta.net",
+    "banco-seguro.xyz", "itau-online.tk", "bradesco-app.ml",
+    "nubank-premiado.ga", "caixa-auxilio.cf", "bb-desbloqueio.gq"
+  ],
+  "certBrFeeds": [
+    "https://www.cert.br/stats/incidentes/",
+    "https://www.cert.br/docs/whitepapers/"
+  ]
+}

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>GuardianShield — Sandbox</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'none';">
+  <style>
+    body { background: #0a0a12; color: #f1f5f9; font-family: 'Segoe UI', sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+    .sandbox-msg { text-align: center; padding: 40px; }
+    .sandbox-msg h1 { font-size: 48px; margin-bottom: 16px; }
+    .sandbox-msg p { color: #94a3b8; font-size: 14px; }
+    
+    .gs-progress-loader {
+      width: 100%;
+      max-width: 300px;
+      background: rgba(255, 255, 255, 0.08);
+      height: 4px;
+      border-radius: 10px;
+      margin: 24px auto;
+      overflow: hidden;
+      position: relative;
+    }
+    .gs-progress {
+      width: 1px;
+      height: 100%;
+      background: #8B5CF6;
+      box-shadow: 0 0 10px rgba(139, 92, 246, 0.4);
+      animation: gs-loading-anim 2s ease infinite;
+    }
+    @keyframes gs-loading-anim {
+      0% { width: 0%; }
+      10% { width: 15%; }
+      50% { width: 45%; }
+      60% { width: 65%; }
+      100% { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="sandbox-msg">
+    <h1 style="font-size: 64px; margin-bottom: 8px;">🛡️</h1>
+    <h2 style="font-size: 24px; font-weight: 900; color: #fff; margin-bottom: 4px;">Isolamento por IA Híbrida v1.1.5</h2>
+    <div class="gs-progress-loader">
+      <div class="gs-progress"></div>
+    </div>
+    <p style="max-width: 400px; margin: 0 auto; line-height: 1.6;">Esta página foi neutralizada pelo motor <strong>GuardianShield™ 11.0 Plus</strong>. O conteúdo foi isolado em uma sandbox segura para prevenir extração de dados e injeção de malware.</p>
+  </div>
+</body>
+</html>

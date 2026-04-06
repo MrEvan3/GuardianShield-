@@ -1,0 +1,22 @@
+# Chrome Extension - gerado automaticamente (não versionar)
+_metadata/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# Chaves e segredos (NUNCA comitar)
+*.env
+.env*
+secrets.json
+config.local.json
