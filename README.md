@@ -52,14 +52,23 @@
 
 > Popup principal · Painel de controle · Heurísticas · Filtragem & AdBlock · Privacidade & Stealth
 > <img width="363" height="601" alt="Captura de tela 2026-04-06 170200" src="https://github.com/user-attachments/assets/fcfad9a4-b3ec-4a66-8e61-fb5e70451f90" />
+
 <img width="365" height="596" alt="Captura de tela 2026-04-06 170211" src="https://github.com/user-attachments/assets/6f3d3c9a-2552-4ea5-9ded-59bcd4ad29f8" />
+
 <img width="353" height="589" alt="Captura de tela 2026-04-06 170228" src="https://github.com/user-attachments/assets/54dd7cbb-8356-4eb9-893a-42fd77bd7c14" />
+
 <img width="355" height="599" alt="Captura de tela 2026-04-06 170236" src="https://github.com/user-attachments/assets/3e61b9cd-b01b-4a01-b3bd-300ac8b7835f" />
+
 <img width="1057" height="877" alt="Captura de tela 2026-04-06 170305" src="https://github.com/user-attachments/assets/e5f21fdc-809d-4b25-a105-14647e4f8b5a" />
+
 <img width="913" height="912" alt="Captura de tela 2026-04-06 170352" src="https://github.com/user-attachments/assets/05caa909-4800-4e97-aa02-49ef0046af14" />
+
 <img width="917" height="891" alt="Captura de tela 2026-04-06 170402" src="https://github.com/user-attachments/assets/a730574e-78bd-4bcb-ae0c-819ff9e1cc35" />
+
 <img width="1110" height="734" alt="Captura de tela 2026-04-06 190855" src="https://github.com/user-attachments/assets/381ce5dc-74e3-4550-a4fa-acadacd01b00" />
+
 <img width="990" height="923" alt="Captura de tela 2026-04-06 170317" src="https://github.com/user-attachments/assets/89f175e8-95d5-4839-b814-6e220b4746b2" />
+
 <img width="992" height="858" alt="Captura de tela 2026-04-06 170339" src="https://github.com/user-attachments/assets/5a2c5c41-4875-4e5e-8dd6-ef259a663278" />
 
 
